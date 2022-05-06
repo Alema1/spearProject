@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32319.34
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "spearproject", "spearproject\spearproject.pyproj", "{3A4CC4BA-B04E-40F8-A2E6-D5CBFBD53717}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3A4CC4BA-B04E-40F8-A2E6-D5CBFBD53717}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A4CC4BA-B04E-40F8-A2E6-D5CBFBD53717}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DF23A170-4A07-44EC-900F-765C2EE03170}
+	EndGlobalSection
+EndGlobal
