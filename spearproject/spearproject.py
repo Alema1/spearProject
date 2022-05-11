@@ -12,14 +12,21 @@ V 1.2
 
 #-*- coding: cp1252 -*-
 
+
 import numpy as np
 import cv2
 import serial
 import time
+import manualMode
+import detect
 
 #comport = serial.Serial('COM3',19200) # porta serial
 
 #função map original do Arduino implementada em py
+
+#resolucao da camera
+horizontalRes = 640
+verticalRes = 480
 
 def Alema1map(valor, in_min, in_max, out_min, out_max):
     return int((valor-in_min) * (out_max-out_min) / (in_max-in_min) + out_min)
@@ -93,11 +100,11 @@ class App(object):
                 if self.show_backproj:
                     vis[:] = prob[...,np.newaxis]
                 try:
-# Magica                    
+                # Magica                    
                     cv2.ellipse(vis, track_box, (0, 0, 255), 2)
                     #Envio e impressão dos dados do rastreamento
-                    X = Alema1map(track_box[0][0],0,640,0,255) #X convertido pra int variando de 0 a 640px
-                    Y = Alema1map(track_box[0][1],0,480,0,255) #Y convertido pra int variando de 0 a 480px          
+                    X = Alema1map(track_box[0][0],0,horizontalRes,0,255) #X convertido pra int variando de 0 a 640px
+                    Y = Alema1map(track_box[0][1],0,verticalRes,0,255) #Y convertido pra int variando de 0 a 480px          
                     comport.write([3,X])#envia no serial a coordenada X
                     comport.write([4,Y])#envia no serial a coordenada Y
                     print([4,Y])
