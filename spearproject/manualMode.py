@@ -1,12 +1,10 @@
- #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-#
 """
 Grupo de Automação e Robótica aplicada - GARRA
+
 Spear Manual Control V2.2
 
 """
+
 import time
 from msvcrt import kbhit
 import pywinusb.hid as hid

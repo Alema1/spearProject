@@ -1,12 +1,12 @@
 '''
-Código de visão computacional utilizado no Mockup do projeto SPEAR
+Codigo de visao computacional utilizado no Mockup do projeto SPEAR
 utilizando como base o Camshift do OpenCV
 
-Vinicius H. Schreiner - Grupo de Automação e Robótica Aplicada/UFSM
+Vinicius H. Schreiner - Grupo de Automacao e Robotica Aplicada/UFSM
 
 V 1.2
 
-*Resolução minha webcam = 640x480
+*Resolucao minha webcam = 640x480
 '''
 
 #-*- coding: cp1252 -*-
@@ -18,7 +18,11 @@ import time
 
 #comport = serial.Serial('COM3',19200) # porta serial
 
-#função map original do arduino implementada em py
+#funÃ§Ã£o map original do Arduino implementada em py
+
+#resolucao da camera
+horizontalRes = 640
+verticalRes = 480
 
 def Alema1map(valor, in_min, in_max, out_min, out_max):
     return int((valor-in_min) * (out_max-out_min) / (in_max-in_min) + out_min)
@@ -55,7 +59,7 @@ class App(object):
         bin_count = self.hist.shape[0]
         bin_w = 24
         img = np.zeros((256, bin_count*bin_w, 3), np.uint8)
-        for i in xrange(bin_count):
+        for i in range(bin_count):
             h = int(self.hist[i])
             cv2.rectangle(img, (i*bin_w+2, 255), ((i+1)*bin_w-2, 255-h), (int(180.0*i/bin_count), 255, 255), -1)
         img = cv2.cvtColor(img, cv2.COLOR_HSV2BGR)
@@ -92,14 +96,14 @@ class App(object):
                 if self.show_backproj:
                     vis[:] = prob[...,np.newaxis]
                 try:
-# Magica                    
+                # Magica                    
                     cv2.ellipse(vis, track_box, (0, 0, 255), 2)
-                    #Envio e impressão dos dados do rastreamento
-                    
-                    X = Alema1map(track_box[0][0],0,640,0,255) #X convertido pra int variando de 0 a 640px
-                    Y = Alema1map(track_box[0][1],0,480,0,255) #Y convertido pra int variando de 0 a 480px          
+                    #Envio e impressÃ£o dos dados do rastreamento
+                    X = Alema1map(track_box[0][0],0,horizontalRes,0,255) #X convertido pra int variando de 0 a 640px
+                    Y = Alema1map(track_box[0][1],0,verticalRes,0,255) #Y convertido pra int variando de 0 a 480px          
                     comport.write([3,X])#envia no serial a coordenada X
                     comport.write([4,Y])#envia no serial a coordenada Y
+                    print([4,Y])
                     print(X)
                     print(Y)
                     time.sleep(0.05)
@@ -116,22 +120,9 @@ class App(object):
                    print('ih rapaz')
 
             cv2.imshow('SPEAR Eye', vis)
-            
-
             ch = cv2.waitKey(5)
             if ch == 27:
                 break
             if ch == ord('b'):
                 self.show_backproj = not self.show_backproj
         cv2.destroyAllWindows()
-
-
-
-if __name__ == '__main__':
-    import sys
-    try:
-        video_src = sys.argv[1]
-    except:
-        video_src = 0
-    print(__doc__)
-App(video_src).run()
