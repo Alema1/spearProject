@@ -1,4 +1,7 @@
+asposestorage==1.0.2
 numpy==1.22.2
 opencv_python==4.5.5.62
 pyserial==3.5
 pywinusb==0.4.2
+torch==1.11.0+cu113
+utils==1.0.1
