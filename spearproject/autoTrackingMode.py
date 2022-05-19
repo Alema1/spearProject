@@ -1,4 +1,5 @@
 '''
+
 Codigo de visao computacional utilizado no Mockup do projeto SPEAR
 utilizando como base o Camshift do OpenCV
 
@@ -7,6 +8,7 @@ Vinicius H. Schreiner - Grupo de Automacao e Robotica Aplicada/UFSM
 V 1.2
 
 *Resolucao minha webcam = 640x480
+
 '''
 
 #-*- coding: cp1252 -*-
