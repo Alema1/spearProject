@@ -4,12 +4,16 @@ Grupo de Automação e Robótica aplicada - GARRA
 
 Spear Manual Control V2.2
 
+ID Thrustmaster T.Flight HOTAS 0xb108
+ID Old Joystick 0xb011
 """
 
 import time
 from msvcrt import kbhit
 import pywinusb.hid as hid
 import serial
+
+joystickID = 0xb108
 
 globals()['XDATA_TO_ARDUINO'] = None
 globals()['XDATA_TO_ARDUINO_ANT'] = None
@@ -20,6 +24,52 @@ globals()['YDATA_TO_ARDUINO_ANT'] = None
 #ser = serial.Serial('COM3', 19200, serial.EIGHTBITS) #porta do arduino
 
 def sample_handler(data):
+    # essa funcao tem como objetivo lidar com os dados crus obtidos do joystick
+    
+    print(data)
+    '''
+    # botoes
+    if data[1] == 1:
+        print('botao 1 pressionado')
+    if data[1] == 2:
+        print('botao 2 pressionado')
+    if data[1] == 4:
+        print('botao 3 pressionado')
+    if data[1] == 8:
+        print('botao 4 pressionado')
+
+    # eixo x
+    if data[5] == 0:
+        print('Eixo X no 1 quadrante')
+    if data[5] == 1:
+        print('Eixo X no 2 quadrante')
+    if data[5] == 2:
+        print('Eixo X no 3 quadrante')
+        if data[4] == 0:
+            print('Eixo X centrado')
+    if data[5] == 3:
+        print('Eixo X no 4 quadrante')
+        
+    # eixo y
+    if data[7] == 0:
+        print('Eixo Y no 1 quadrante')
+    if data[7] == 1:
+        print('Eixo Y no 2 quadrante')
+    if data[7] == 2:
+        print('Eixo Y no 3 quadrante')
+        if data[6] == 0:
+            print('Eixo Y centrado')
+    if data[7] == 3:
+        print('Eixo Y no 4 quadrante')
+
+    #eixo z
+    if data[9] > 128:
+        print('Eixo Z na direita')
+    if data[9] < 128:
+        print('Eixo Z na esquerda')
+    if data[9] == 128:
+        print('Eixo Z centrado')
+    '''
     # TALVEZ POSSA REMOVER
     global XDATA_TO_ARDUINO # Utilizando a variavel global
     global YDATA_TO_ARDUINO # Utilizando a variavel global
@@ -36,6 +86,8 @@ def sample_handler(data):
 
         YDATA_TO_ARDUINO = data [2] ## Tentando resolver
         if (YDATA_TO_ARDUINO != YDATA_TO_ARDUINO_ANT) : YDATA_TO_ARDUINO_ANT = YDATA_TO_ARDUINO # Caso os dados forem diferentes atualiza
+
+    
     
         """
         try:  # Na primeira iteração os valores serao None, por isso o Try Except
@@ -75,21 +127,25 @@ def raw_test():
     if all_hids:
         while True:
             for index, device in enumerate(all_hids):
-                if(device.product_id==0xb011): #id do joystick a ser usado
+                if(index == 2):
+                    print(device.product_id)
+                if(device.product_id==joystickID): #id do joystick a ser usado
+                    print("Joystick Reconhecido!")
                     try:
                         device.open()
 
                         #set custom raw data handler
                         device.set_raw_data_handler(sample_handler)
-
                         print("\nRecebendo Dados...Pressione qualquer tecla pra sair ")
                         while not kbhit() and device.is_plugged():
 
                             try: # Nas primeiras iterações a data vai ser None, por isso o try except
+                                print(raw_data)
                                 #print("Eixo X", XDATA_TO_ARDUINO) # Só pra debug
                                 #print("Eixo Y", YDATA_TO_ARDUINO) # Só pra debug
-                                ser.write([1, XDATA_TO_ARDUINO]) # Data a ser enviada
-                                ser.write([2, YDATA_TO_ARDUINO]) # Data a ser enviada
+                                # envia via serial
+                                #ser.write([1, XDATA_TO_ARDUINO]) # Data a ser enviada
+                                #ser.write([2, YDATA_TO_ARDUINO]) # Data a ser enviada
 
                                 """
                                 Na versao final o PRINT tem que voltar pra o tratamento dos eixos
@@ -113,10 +169,12 @@ if __name__ == '__main__':
     # first be kind with local encodings
     import sys
     if sys.version_info >= (3,):
+        print("a")
         # as is, don't handle unicodes
         unicode = str
         raw_input = input
     else:
+        print("b")
         # allow to show encoded strings
         import codecs
         sys.stdout = codecs.getwriter('mbcs')(sys.stdout)
