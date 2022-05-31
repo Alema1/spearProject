@@ -26,3 +26,7 @@ SSP3
 Joystick:
 
 Thrustmaster T.Flight HOTAS
+
+Motors:
+
+Drivers:
