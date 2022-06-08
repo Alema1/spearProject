@@ -30,3 +30,6 @@ Thrustmaster T.Flight HOTAS
 Motors:
 
 Drivers:
+
+5A driver for the horizontal axis.
+4A driver for the vertical axis.
