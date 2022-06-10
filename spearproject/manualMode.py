@@ -14,6 +14,9 @@ import pywinusb.hid as hid
 import serial
 import sys
 
+joystickID = 0xb108
+ser = serial.Serial('COM5', 19200, serial.EIGHTBITS) #porta do arduino
+
 if sys.version_info >= (3,):
     # as is, don't handle unicodes
     unicode = str
@@ -22,30 +25,51 @@ else:
     # allow to show encoded strings
     import codecs
 
-joystickID = 0xb108
-
-#ser = serial.Serial('COM3', 19200, serial.EIGHTBITS) #porta do arduino
-
 def Alema1map(valor, in_min, in_max, out_min, out_max):
     return int((valor-in_min) * (out_max-out_min) / (in_max-in_min) + out_min)
 
 def sample_handler(data):
     # essa funcao tem como objetivo lidar com os dados crus obtidos do joystick
-    # converte o dado do joystick que é recebido em um byte de dado e outro de identificador de quadrante para um numero de 10 bits
+    global convertedValueX
+    global indicatorX
+    speed = 3
+    
     if data[5] == 0:
-        convertedValue = Alema1map(data[4],0,255,0,255)
-        print(convertedValue)
+        convertedValueX = Alema1map(data[4],0,255,255,0)
+        indicatorX = 0
+        if convertedValueX < 127:
+            speed == 3
+        else: speed = 4
+        print(convertedValueX)
+        print("Velocidade",speed)
     if data[5] == 1:
-        convertedValue = Alema1map(data[4],0,255,255,512)
-        print(convertedValue)
+        convertedValueX = Alema1map(data[4],0,255,255,0)
+        indicatorX = 1
+        if convertedValueX < 127:
+            speed = 1
+        else: speed = 2
+        print(convertedValueX)
+        print("Velocidade",speed)
     if data[5] == 2:
-        convertedValue = Alema1map(data[4],0,255,512,768)
-        print(convertedValue)
+        convertedValueX = Alema1map(data[4],0,255,0,255)
+        indicatorX = 3
+        if convertedValueX < 127:
+            speed = 1
+        else: speed = 2
+        print(convertedValueX)
+        print("Velocidade",speed)
         if data[4] == 0:
+            indicatorX = 2
             print('Eixo X centrado')
     if data[5] == 3:
-        convertedValue = Alema1map(data[4],0,255,768,1023)
-        print(convertedValue)
+        convertedValueX = Alema1map(data[4],0,255,0,255)
+        indicatorX = 4
+        if convertedValueX < 127:
+            speed == 3
+        else: speed = 4
+        print(convertedValueX)
+        print("Velocidade",speed)
+
     
     '''
     # botoes
@@ -118,32 +142,31 @@ def raw_test():
     if all_hids:
         while True:
             for index, device in enumerate(all_hids):
-                if(index == 2):
-                    print(device.product_id)
-                if(device.product_id==joystickID): #id do joystick a ser usado
+                if(device.product_id==joystickID):
                     print("Joystick Reconhecido!")
                     try:
                         device.open()
-                        #set custom raw data handler
                         device.set_raw_data_handler(sample_handler)
                         print("\nRecebendo Dados...Pressione qualquer tecla pra sair ")
                         while not kbhit() and device.is_plugged():
-                            try: # Nas primeiras iterações a data vai ser None, por isso o try except                    
-                                # tenta enviar via serial
-                                #ser.write([1, XDATA_TO_ARDUINO]) # Data a ser enviada
-                                #ser.write([2, YDATA_TO_ARDUINO]) # Data a ser enviada
-                            except:
+                            #try: # Nas primeiras iterações a data vai ser None, por isso o try except                    
+                                ser.write([1, indicatorX])
+                                print([1, indicatorX])
+                                ser.write([2, convertedValueX])
+                                #ser.write([3, speed])
+                                #print('Dados enviados')
+                            #except:
                                 #print("Erro ao enviar os dados para o microcontrolador!") # Só pra debug
-                                pass # Se não conseguir escrever vai para a proxima interação
+                               # pass # Se não conseguir escrever vai para a proxima interação
                             #time.sleep(0.04) #retirar para maior desempenho
-                        return
+                       # return
                     finally:
                         device.close()
-        else:
-            print("Joystick não conectado!!")
+                else:
+                    print("Joystick não conectado!")
 
         sys.stdout = codecs.getwriter('mbcs')(sys.stdout)
     print("\nReconhecendo Dispositivo e iniciado calibragem... ")
 
-# roda 
+# roda
 raw_test()
