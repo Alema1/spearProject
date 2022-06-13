@@ -23,18 +23,18 @@ pip install -r requirements.txt  # install
 
 Communication Protocol:
 
- SSP3
+ -SSP3
 
 Joystick:
 
- Thrustmaster T.Flight HOTAS
+ -Thrustmaster T.Flight HOTAS
 
 Motors:
 
- 3.2A Sanyo Denki Stepper Motor for the horizontal axis.
- 2.4A Sanyo Denki Stepper Motor for the vertical axis.
+ -3.2A Sanyo Denki Stepper Motor for the horizontal axis.
+ -2.4A Sanyo Denki Stepper Motor for the vertical axis.
 
 Drivers:
 
- 5A driver for the horizontal axis.
- 4A driver for the vertical axis.
+ -5A driver for the horizontal axis.
+ -4A driver for the vertical axis.
