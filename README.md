@@ -16,3 +16,23 @@ cd spearproject
 pip install -r requirements.txt  # install
 ```
  The project is configurated to run on Visual Studio.
+
+# Hardware Info
+
+Communication Protocol:
+
+ SSP3
+
+Joystick:
+
+ Thrustmaster T.Flight HOTAS
+
+Motors:
+
+ 3.2A Sanyo Denki Stepper Motor for the horizontal axis.
+ 2.4A Sanyo Denki Stepper Motor for the vertical axis.
+
+Drivers:
+
+ 5A driver for the horizontal axis.
+ 4A driver for the vertical axis.
