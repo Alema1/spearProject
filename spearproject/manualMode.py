@@ -17,8 +17,10 @@ import sys
 joystickID = 0xb108
 ser = serial.Serial('COM5', 19200, serial.EIGHTBITS) #porta do arduino
 
-global convertedValueX
-global indicatorX
+globals()['indicatorX'] = 2
+globals()['convertedValueX'] = 0
+#global convertedValueX
+#global indicatorX
 
 if sys.version_info >= (3,):
     # as is, don't handle unicodes
@@ -32,6 +34,8 @@ def Alema1map(valor, in_min, in_max, out_min, out_max):
     return int((valor-in_min) * (out_max-out_min) / (in_max-in_min) + out_min)
 
 def sample_handler(data):
+    global indicatorX
+    global convertedValueX
     # essa funcao tem como objetivo lidar com os dados crus obtidos do joystick   
     if data[5] == 0:
         convertedValueX = Alema1map(data[4],0,255,255,0)
@@ -41,13 +45,12 @@ def sample_handler(data):
         indicatorX = 1
     if data[5] == 2:
         convertedValueX = Alema1map(data[4],0,255,0,255)
-        indicatorX = 3
-        if data[4] == 0:
-            indicatorX = 2
-            print('Eixo X centrado')
+        indicatorX = 2
+        #if data[4] == 0:
+            #print('Eixo X centrado')
     if data[5] == 3:
         convertedValueX = Alema1map(data[4],0,255,0,255)
-        indicatorX = 4
+        indicatorX = 3
         
     print('Valor: ',convertedValueX, 'Quadrante: ', indicatorX)
 
@@ -64,13 +67,12 @@ def raw_test():
                         device.set_raw_data_handler(sample_handler)
                         print("\nRecebendo Dados...Pressione qualquer tecla pra sair ")
                         while not kbhit() and device.is_plugged():
-                            #try: # Nas primeiras iterações a data vai ser None, por isso o try except                    
-                                ser.write([1, indicatorX])
-                                print([1, indicatorX])
-                                ser.write([2, convertedValueX])
-                                #ser.write([3, speed])
+                            try: # Nas primeiras iterações a data vai ser None, por isso o try except                    
+                                ser.write([1, indicatorX, convertedValueX])
+                                #ser.write([2, convertedValueX])
                                 #print('Dados enviados')
-                            #except:
+                                print([1, indicatorX, convertedValueX])
+                            except:
                                 print("Erro ao enviar os dados para o microcontrolador!")
                                # pass # Se não conseguir escrever vai para a proxima interação
                             #time.sleep(0.04) #retirar para maior desempenho
@@ -86,7 +88,7 @@ def raw_test():
 # roda
 raw_test()
 
-    '''
+'''
     # botoes
     if data[1] == 1:
         print('botao 1 pressionado')
