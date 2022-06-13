@@ -3,7 +3,7 @@ Algoritmo de movimentação dos motores baseado em controle manual com joystick 
 
 Grupo de Automação e Robótica Aplicada/UFSM
 
-V 1.2
+V 1.5
  */
 
 byte incomingByte[2];
@@ -20,12 +20,12 @@ int dirY = 4;
 int pulY = 3;
 int enY = 2;
 
-int speedM;
+int MotorSpeed;
 int indicatorX;
+int convertedValueX;
 
 
 void setup() {
-  
         Serial.begin(19200);
         pinMode(dirX, OUTPUT);
         pinMode(pulX, OUTPUT);

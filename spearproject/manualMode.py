@@ -17,6 +17,9 @@ import sys
 joystickID = 0xb108
 ser = serial.Serial('COM5', 19200, serial.EIGHTBITS) #porta do arduino
 
+global convertedValueX
+global indicatorX
+
 if sys.version_info >= (3,):
     # as is, don't handle unicodes
     unicode = str
@@ -29,48 +32,60 @@ def Alema1map(valor, in_min, in_max, out_min, out_max):
     return int((valor-in_min) * (out_max-out_min) / (in_max-in_min) + out_min)
 
 def sample_handler(data):
-    # essa funcao tem como objetivo lidar com os dados crus obtidos do joystick
-    global convertedValueX
-    global indicatorX
-    speed = 3
-    
+    # essa funcao tem como objetivo lidar com os dados crus obtidos do joystick   
     if data[5] == 0:
         convertedValueX = Alema1map(data[4],0,255,255,0)
         indicatorX = 0
-        if convertedValueX < 127:
-            speed == 3
-        else: speed = 4
-        print(convertedValueX)
-        print("Velocidade",speed)
     if data[5] == 1:
         convertedValueX = Alema1map(data[4],0,255,255,0)
         indicatorX = 1
-        if convertedValueX < 127:
-            speed = 1
-        else: speed = 2
-        print(convertedValueX)
-        print("Velocidade",speed)
     if data[5] == 2:
         convertedValueX = Alema1map(data[4],0,255,0,255)
         indicatorX = 3
-        if convertedValueX < 127:
-            speed = 1
-        else: speed = 2
-        print(convertedValueX)
-        print("Velocidade",speed)
         if data[4] == 0:
             indicatorX = 2
             print('Eixo X centrado')
     if data[5] == 3:
         convertedValueX = Alema1map(data[4],0,255,0,255)
         indicatorX = 4
-        if convertedValueX < 127:
-            speed == 3
-        else: speed = 4
-        print(convertedValueX)
-        print("Velocidade",speed)
+        
+    print('Valor: ',convertedValueX, 'Quadrante: ', indicatorX)
 
-    
+
+def raw_test():
+    all_hids = hid.find_all_hid_devices()
+    if all_hids:
+        while True:
+            for index, device in enumerate(all_hids):
+                if(device.product_id==joystickID):
+                    print("Joystick Reconhecido!")
+                    try:
+                        device.open()
+                        device.set_raw_data_handler(sample_handler)
+                        print("\nRecebendo Dados...Pressione qualquer tecla pra sair ")
+                        while not kbhit() and device.is_plugged():
+                            #try: # Nas primeiras iterações a data vai ser None, por isso o try except                    
+                                ser.write([1, indicatorX])
+                                print([1, indicatorX])
+                                ser.write([2, convertedValueX])
+                                #ser.write([3, speed])
+                                #print('Dados enviados')
+                            #except:
+                                print("Erro ao enviar os dados para o microcontrolador!")
+                               # pass # Se não conseguir escrever vai para a proxima interação
+                            #time.sleep(0.04) #retirar para maior desempenho
+                       # return
+                    finally:
+                        device.close()
+                else:
+                    print("Joystick não conectado!")
+
+        sys.stdout = codecs.getwriter('mbcs')(sys.stdout)
+    print("\nReconhecendo Dispositivo e iniciado calibragem... ")
+
+# roda
+raw_test()
+
     '''
     # botoes
     if data[1] == 1:
@@ -136,37 +151,3 @@ def sample_handler(data):
         ser.write([6,data[6]])
         print("Botao 2",[6,data[6]])
 """
-
-def raw_test():
-    all_hids = hid.find_all_hid_devices()
-    if all_hids:
-        while True:
-            for index, device in enumerate(all_hids):
-                if(device.product_id==joystickID):
-                    print("Joystick Reconhecido!")
-                    try:
-                        device.open()
-                        device.set_raw_data_handler(sample_handler)
-                        print("\nRecebendo Dados...Pressione qualquer tecla pra sair ")
-                        while not kbhit() and device.is_plugged():
-                            #try: # Nas primeiras iterações a data vai ser None, por isso o try except                    
-                                ser.write([1, indicatorX])
-                                print([1, indicatorX])
-                                ser.write([2, convertedValueX])
-                                #ser.write([3, speed])
-                                #print('Dados enviados')
-                            #except:
-                                #print("Erro ao enviar os dados para o microcontrolador!") # Só pra debug
-                               # pass # Se não conseguir escrever vai para a proxima interação
-                            #time.sleep(0.04) #retirar para maior desempenho
-                       # return
-                    finally:
-                        device.close()
-                else:
-                    print("Joystick não conectado!")
-
-        sys.stdout = codecs.getwriter('mbcs')(sys.stdout)
-    print("\nReconhecendo Dispositivo e iniciado calibragem... ")
-
-# roda
-raw_test()
