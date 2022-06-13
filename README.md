@@ -4,9 +4,11 @@ This repo cointais the basic codes of the new version of the project.
 
 # About the Project
 
-The S.P.E.A.R. project consist in a autonomous weapon station and sentry gun for low-medium caliber guns. Its based in three diferent control modes: Manual Mode using joystick, Auto Tracking Mode where the operator locks on a target and Surveillance Mode, where ir uses a trained model to recognize handguns to find and track possible targets.
+S.P.E.A.R. project consist in a autonomous weapon station and sentry gun for low-medium caliber guns. Its based in three diferent control modes: Manual Mode using joystick, Auto Tracking Mode where the operator locks on a target and Surveillance Mode, where ir uses a trained model to recognize handguns to find and track possible targets.
 
 # Instalation
+
+The project runs on Python 3.7+, so you should download a stable version [here](https://www.python.org/downloads/). We also use Arduino [IDE](https://www.arduino.cc/en/software) to program and control the electrical and mechanical parts of the project. For computer vision we mainly use modified versions of OpenCV and YOLOv5, wich are also included in this repo and the requiremements are included bellow. 
 
 The first step to install the project is to clone this repo via HTTPS, and install requirements.txt via pip using
 
@@ -15,7 +17,7 @@ git clone https://github.com/Alema1/spearproject.git  # clone
 cd spearproject
 pip install -r requirements.txt  # install
 ```
- The project is configurated to run on Visual Studio.
+ The current version is configurated to run on Visual Studio.
 
 # Hardware Info
 
