@@ -15,7 +15,7 @@ import serial
 import sys
 
 joystickID = 0xb108
-ser = serial.Serial('COM5', 19200, serial.EIGHTBITS) #porta do arduino
+ser = serial.Serial('COM6', 9600, serial.EIGHTBITS) #porta do arduino
 
 globals()['indicatorX'] = 2
 globals()['convertedValueX'] = 0
@@ -52,7 +52,7 @@ def sample_handler(data):
         convertedValueX = Alema1map(data[4],0,255,0,255)
         indicatorX = 3
         
-    print('Valor: ',convertedValueX, 'Quadrante: ', indicatorX)
+    #print('Valor: ',convertedValueX, 'Quadrante: ', indicatorX)
 
 
 def raw_test():
@@ -69,12 +69,11 @@ def raw_test():
                         while not kbhit() and device.is_plugged():
                             try: # Nas primeiras iterações a data vai ser None, por isso o try except                    
                                 ser.write([1, indicatorX, convertedValueX])
-                                #ser.write([2, convertedValueX])
                                 #print('Dados enviados')
                                 print([1, indicatorX, convertedValueX])
                             except:
                                 print("Erro ao enviar os dados para o microcontrolador!")
-                               # pass # Se não conseguir escrever vai para a proxima interação
+                                #pass # Se não conseguir escrever vai para a proxima interação
                             #time.sleep(0.04) #retirar para maior desempenho
                        # return
                     finally:

@@ -20,13 +20,8 @@ int dirY = 4;
 int pulY = 3;
 int enY = 2;
 
-int MotorSpeed;
-int indicatorX;
-int convertedValueX;
-
-
 void setup() {
-        Serial.begin(19200);
+        Serial.begin(9600);
         pinMode(dirX, OUTPUT);
         pinMode(pulX, OUTPUT);
         pinMode(enX , OUTPUT);
@@ -35,48 +30,56 @@ void setup() {
         pinMode(enY , OUTPUT);
 }
 
-void loop(){
-  
-Serial.readBytes(incomingByte,3);
-
-if(incomingByte[0] == 1){  //EIXO X
-  switch (incomingByte[1]){
-    case 0:
-    if(incomingByte[2]<128){
-     digitalWrite(dirX, LOW);
-     delayMicroseconds(3000);
-     digitalWrite(pulX, HIGH);
-     delayMicroseconds(3000);
-     digitalWrite(pulX, LOW);
-    }
-    if(incomingByte[2]>128){
-     digitalWrite(dirX, LOW);
-     delayMicroseconds(2000);
-     digitalWrite(pulX, HIGH);
-     delayMicroseconds(2000);
-     digitalWrite(pulX, LOW);
-    }
-    break;
-    case 1:
-    if(incomingByte[2]<128){
-     digitalWrite(dirX, LOW);
-     delayMicroseconds(5000);
-     digitalWrite(pulX, HIGH);
-     delayMicroseconds(5000);
-     digitalWrite(pulX, LOW);
-    }
-    if(incomingByte[2]>128){
-     digitalWrite(dirX, LOW);
-     delayMicroseconds(4000);
-     digitalWrite(pulX, HIGH);
-     delayMicroseconds(4000);
-     digitalWrite(pulX, LOW);
-    }
-    break;
-
-    default:
-
-    break;
-  }
+void passo(int pulPin, int dirPin, int speedM, bool movementDirection){
+  digitalWrite(dirPin, movementDirection);
+  delayMicroseconds(speedM);
+  digitalWrite(pulPin, 1);
+  delayMicroseconds(speedM);
+  digitalWrite(pulPin, 0);
 }
+
+void loop(){
+  digitalWrite(enX, 0); 
+  Serial.readBytes(incomingByte,3);
+  // O byte recebido eh assim: [xxx, xxx, xxx]
+  // Primeiro byte eh o cabecalho, segundo eh o quadrante e terceiro valor
+  if(incomingByte[0] == 1){  // Se for eixo X
+    switch (incomingByte[1]){
+      case 0: // Primeiro Quadrante
+        if(incomingByte[2]<128){
+          passo(pulX, dirX, 3000, 1);
+        }
+        else{
+          passo(pulX, dirX, 2000, 1);
+        }
+      break;
+      case 1: //Segundo Quadrante
+        if(incomingByte[2]<128){
+          passo(pulX, dirX, 5000, 1);
+        }
+        else{
+          passo(pulX, dirX, 4000, 1);
+        }
+      break;
+      case 2: // Terceito Quadrante, zero aqui eh o joystick centrado
+        if((incomingByte[2]<128) && (incomingByte[2] != 0)){
+          passo(pulX, dirX, 5000, 0);
+        }
+        if((incomingByte[2]>128) && (incomingByte[2] != 0)){
+          passo(pulX, dirX, 4000, 0);
+        }
+      break;
+      case 3: // Quarto Quadrante
+        if(incomingByte[2]<128){
+          passo(pulX, dirX, 3000, 0);
+        }
+        else{
+          passo(pulX, dirX, 2000, 0);
+        }
+      break;
+      default:
+        //passo(pulX, dirX, 7000, 0);
+      break;
+    }
+  }
 }
