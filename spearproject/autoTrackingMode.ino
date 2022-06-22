@@ -1,5 +1,5 @@
 /*
-Algoritmo de movimentação dos motores baseado em controle manual com joystick com comunicação serial
+Algoritmo de movimentação dos motores baseado em visao computacional com comunicação serial
 
 Grupo de Automação e Robótica Aplicada/UFSM
 
@@ -8,13 +8,13 @@ V 1.2
 
 byte incomingByte[2];
 
-//Motor Grande 
+//Motor Grande / eixo horizontal
 
 int dirX = 5;
 int pulX = 6;
 int enX = 7;
 
-//Motor Pequeno
+//Motor Pequeno / eixo vertical
 
 int dirY = 10;
 int pulY = 8;
@@ -36,39 +36,37 @@ void loop(){
   
 Serial.readBytes(incomingByte,2);
 
-if(incomingByte[0] == 1){  //EIXO X
+if(incomingByte[0] == 3){  //EIXO X
   
-  if(incomingByte[1] > 196){
+  if(incomingByte[1] > 140){ //127 é o meio da camera mapeada de 0 a 255 com resolução de 640x480
                     digitalWrite(dirX, LOW);
-                    delayMicroseconds(5000);
+                    delayMicroseconds(6000);
                     digitalWrite(pulX, HIGH);
-                    delayMicroseconds(5000);
-                    digitalWrite(pulX, LOW);
-                    Serial.flush();  
+                    delayMicroseconds(6000);
+                    digitalWrite(pulX, LOW);  
   }
-  if(incomingByte[1] < 60){
+  if(incomingByte[1] < 115){
                     digitalWrite(dirX, HIGH);
-                    delayMicroseconds(5000);
+                    delayMicroseconds(6000);
                     digitalWrite(pulX, HIGH);
-                    delayMicroseconds(5000);
-                    digitalWrite(pulX, LOW);
-                    Serial.flush();                     
+                    delayMicroseconds(6000);
+                    digitalWrite(pulX, LOW);                    
     }
   }
-if(incomingByte[0] == 2){  //EIXO Y
+if(incomingByte[0] == 4){  //EIXO Y
   
-  if(incomingByte[1] > 196){
+  if(incomingByte[1] > 137){ //127 é o meio da camera mapeada de 0 a 255 com resolução de 640x480
                     digitalWrite(dirY, LOW);
-                    delayMicroseconds(10);
+                    delayMicroseconds(20);
                     digitalWrite(pulY, HIGH);
-                    delayMicroseconds(10);
+                    delayMicroseconds(20);
                     digitalWrite(pulY, LOW);
   }
-  if(incomingByte[1] < 60){
+  if(incomingByte[1] < 117){
                     digitalWrite(dirY, HIGH);
-                    delayMicroseconds(10);
+                    delayMicroseconds(20);
                     digitalWrite(pulY, HIGH);
-                    delayMicroseconds(10);
+                    delayMicroseconds(20);
                     digitalWrite(pulY, LOW); 
     }
   }
