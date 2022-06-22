@@ -1,14 +1,14 @@
 //Motor Grande 
 
-int dirx = 5;
+int dirx = 7;
 int pulx = 6;
-int enx = 7;
+int enx = 5;
 
 //Motor Pequeno
 
-int diry = 10;
-int puly = 8;
-int eny = 9;
+int diry = 4;
+int puly = 3;
+int eny = 2;
 
 void setup() {
 
@@ -22,19 +22,27 @@ void setup() {
 }
 
 void loop() {
-
-  while(delay(5000)){
-
-    
+  int i;
+  for(i=0; i<1600; i++){
+    digitalWrite(dirx, HIGH);
+    digitalWrite(diry, HIGH);
+    digitalWrite(puly, HIGH);   // turn the LED on (HIGH is the voltage level)
+    digitalWrite(pulx, HIGH);   // turn the LED on (HIGH is the voltage level)
+    delayMicroseconds(10000);                       // wait for a second
+    digitalWrite(puly, LOW);    // turn the LED off by making the voltage LOW
+    digitalWrite(pulx, LOW);    // turn the LED off by making the voltage LOW
+    delayMicroseconds(10000);
   }
-  
-  digitalWrite(puly, HIGH);   // turn the LED on (HIGH is the voltage level)
-  digitalWrite(pulx, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delayMicroseconds(10000);                       // wait for a second
-  digitalWrite(puly, LOW);    // turn the LED off by making the voltage LOW
-  digitalWrite(pulx, LOW);    // turn the LED off by making the voltage LOW
-  delayMicroseconds(10000);                       // wait for a second
-  
+   for(i=0; i<1600; i++){
+    digitalWrite(diry, LOW);
+    digitalWrite(diry, LOW);
+    digitalWrite(puly, HIGH);   // turn the LED on (HIGH is the voltage level)
+    digitalWrite(pulx, HIGH);   // turn the LED on (HIGH is the voltage level)
+    delayMicroseconds(10000);                       // wait for a second
+    digitalWrite(puly, LOW);    // turn the LED off by making the voltage LOW
+    digitalWrite(pulx, LOW);    // turn the LED off by making the voltage LOW
+    delayMicroseconds(10000);
+  }
 }
 
 /*
