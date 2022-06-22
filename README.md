@@ -29,6 +29,8 @@ Thrustmaster T.Flight HOTAS
 
 Motors:
 
+Sanyo Denki
+
 Drivers:
 
 5A driver for the horizontal axis.
