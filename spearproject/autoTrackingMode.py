@@ -16,7 +16,7 @@ import cv2
 import serial
 import time
 
-#comport = serial.Serial('COM3',19200) # porta serial
+#ser = serial.Serial('COM5',9600) # porta serial
 
 #resolucao da camera
 horizontalRes = 640
@@ -98,20 +98,19 @@ class App(object):
                     cv2.ellipse(vis, track_box, (0, 0, 255), 2)
                     #Envio e impressão dos dados do rastreamento
                     X = Alema1map(track_box[0][0],0,horizontalRes,0,255) #X convertido pra int variando de 0 a 640px
-                    Y = Alema1map(track_box[0][1],0,verticalRes,0,255) #Y convertido pra int variando de 0 a 480px          
-                    #comport.write([3,X])#envia no serial a coordenada X
-                    #comport.write([4,Y])#envia no serial a coordenada Y
+                    Y = Alema1map(track_box[0][1],0,verticalRes,0,255) #Y convertido pra int variando de 0 a 480px
+
+                    '''
+                    if X < 118 and X != 0:
+                        ser.write('1'.encode('utf-8'))
+                    if X > 138 and X != 0:
+                        ser.write('5'.encode('utf-8'))
+                    if X >118 and X<138:
+                        ser.write('0'.encode('utf-8'))
+                    '''
                     print(X)
                     print(Y)
                     time.sleep(0.05)
-                    #comport.write(track_box [0][1])#coordenada Y         
-                    #print("Coordenada X")
-                    #print(track_box [0][0])#coordenada X
-                    #a= comport.Read()
-                    #print("Coordenada Y")
-                    #print(track_box [0][1])#coordenada Y
-                    
-
                 except:
                    print('Excecao!')
 
