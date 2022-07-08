@@ -21,11 +21,11 @@ pip install -r requirements.txt  # install
 
 Communication Protocol:
 
-SSP3
+- SSP3
 
 Joystick:
 
-* Thrustmaster T.Flight HOTAS
+- Thrustmaster T.Flight HOTAS
 
 Motors:
 
