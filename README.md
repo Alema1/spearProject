@@ -25,11 +25,11 @@ SSP3
 
 Joystick:
 
-Thrustmaster T.Flight HOTAS
+* Thrustmaster T.Flight HOTAS
 
 Motors:
 
-Sanyo Denki
+- Sanyo Denki
 
 Drivers:
 
