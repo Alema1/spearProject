@@ -15,8 +15,8 @@ import serial
 import sys
 
 joystickID = 0xb108
-globals()['xAxis'] = 128
-globals()['yAxis'] = 128
+globals()['xAxis'] = 0
+globals()['yAxis'] = 0
 globals()['triggerState'] = 0
 globals()['operationMode'] = 0
 ser = serial.Serial('COM5', 9600, serial.EIGHTBITS) #porta do arduino
@@ -50,25 +50,57 @@ def sample_handler(data):
         operationMode = 0
     
     # Eixo X
-    if data[5] == 0: 
-        xAxis = Alema1map(data[4], 0, 255, 0, 64)
     if data[5] == 1:
-        xAxis = Alema1map(data[4], 0, 255, 64, 128)
-    if data[5] == 2:
-        xAxis = Alema1map(data[4], 0, 255, 128, 192)
+        if data[4] > 128:
+            xAxis = 1
+        else:
+            xAxis = 2
+    if data[5] == 0:
+        if data[4] > 128:
+            xAxis = 3
+        else:
+            xAxis = 4
+            
+    if data[5] == 2 and data[4] == 0:
+        xAxis = 0
+    if data[5] == 2 and data[4] != 0:
+        if data[4] < 128:
+            xAxis = 5
+        else:
+            xAxis = 6
+            
     if data[5] == 3:
-        xAxis = Alema1map(data[4], 0, 255, 192, 255)
+        if data[4] < 128:
+            xAxis = 7
+        else:
+            xAxis = 8
 
-    # Eixo X
-    if data[7] == 0: 
-        yAxis = Alema1map(data[6], 0, 255, 0, 64)
+    # Eixo Y
     if data[7] == 1:
-        yAxis = Alema1map(data[6], 0, 255, 64, 128)
-    if data[7] == 2:
-        yAxis = Alema1map(data[6], 0, 255, 128, 192)
+        if data[6] > 128:
+            yAxis = 9
+        else:
+            yAxis = 10
+    if data[7] == 0:
+        if data[6] > 128:
+            yAxis = 11
+        else:
+            yAxis = 12
+            
+    if data[7] == 2 and data[6] == 0:
+        yAxis = 0
+    if data[7] == 2 and data[6] != 0:
+        if data[6] < 128:
+            yAxis = 13
+        else:
+            yAxis = 14
+            
     if data[7] == 3:
-        yAxis = Alema1map(data[6], 0, 255, 192, 255)
-    
+        if data[6] < 128:
+            yAxis = 15
+        else:
+            yAxis = 16
+
 def raw_test():
     all_hids = hid.find_all_hid_devices()
     if all_hids:
@@ -83,12 +115,14 @@ def raw_test():
                         while not kbhit() and device.is_plugged():
                             try: # Nas primeiras iterações a data vai ser None, por isso o try except                    
                                 ser.flush()
-                                ser.write([1, xAxis])
-                                ser.write([2, yAxis])
+                                ser.write([xAxis])
+                                ser.write([yAxis])
+                                #print('x' + str(xAxis))
+                                #print('y' + str(yAxis))
                             except:
                                 print("Erro ao enviar os dados para o microcontrolador!")
                                 pass # Se não conseguir escrever vai para a proxima interação
-                            time.sleep(0.01) #retirar para maior desempenho
+                            #time.sleep(0.005) #retirar para maior desempenho
                        # return
                     finally:
                         device.close()
