@@ -17,6 +17,7 @@ import detect
 joystickID = 0xb108
 #ser = serial.Serial('COM5', 9600, serial.EIGHTBITS) #porta do arduino
 globals()['operationMode'] = 0
+globals()['triggerState'] = 0
 
 def sample_handler(data):
     global operationMode
@@ -95,9 +96,10 @@ def raw_test():
                         while not kbhit() and device.is_plugged():
                             try: # Nas primeiras iterações a data vai ser None, por isso o try except                    
                                 #ser.flush()
+                                print(operationMode)
                             except:
                                 #print("Erro ao enviar os dados para o microcontrolador!")
-                                #pass # Se não conseguir escrever vai para a proxima interação
+                                pass # Se não conseguir escrever vai para a proxima interação
                             time.sleep(0.04) #retirar para maior desempenho
                        # return
                     finally:
@@ -115,7 +117,8 @@ if __name__ == '__main__':
     except:
         video_src = 0
     print(__doc__)
-raw_test()    
-if(operationMode == 2):
-    autoTrackingMode.App(video_src).run()
+#raw_test()
+autoTrackingMode.App(video_src).run()
+#if(operationMode == 2):
+    #autoTrackingMode.App(video_src).run()
     
