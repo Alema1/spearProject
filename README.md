@@ -16,7 +16,7 @@ cd spearproject
 pip install -r requirements.txt  # install
 ```
  The project is configurated to run on Visual Studio.
-a
+
 # Hardware Info
 
 Communication Protocol:
