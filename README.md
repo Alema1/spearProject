@@ -21,7 +21,7 @@ pip install -r requirements.txt  # install
 
 # Hardware Info
 
-Communication Protocol:
+Communication Protocol:a
 
  -SSP3
 
