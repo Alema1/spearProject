@@ -21,6 +21,13 @@ import time
 #resolucao da camera
 horizontalRes = 640
 verticalRes = 480
+#variaveis da mira
+reticleCircleSize = 30
+reticleLineSize = 5
+#cores
+red   = (0, 0, 255)
+green = (0, 255, 0)
+blue  = (255, 0, 0)
 
 #função map original do Arduino implementada em py
 def Alema1map(valor, in_min, in_max, out_min, out_max):
@@ -40,17 +47,7 @@ class App(object):
         self.track_window = None
 
     def onmouse(self, event, x, y, flags, param):
-        if event == cv2.EVENT_LBUTTONDOWN:
-            self.drag_start = (x, y)
-            self.track_window = None
-        if self.drag_start:
-            xmin = min(x, self.drag_start[0])
-            ymin = min(y, self.drag_start[1])
-            xmax = max(x, self.drag_start[0])
-            ymax = max(y, self.drag_start[1])
-            self.selection = (xmin, ymin, xmax, ymax)
-        if event == cv2.EVENT_LBUTTONUP:
-            self.drag_start = None
+        if event == operationMode == 1:
             self.track_window = (xmin, ymin, xmax - xmin, ymax - ymin)
 
     def show_hist(self):
@@ -69,8 +66,16 @@ class App(object):
             vis = self.frame.copy()
             hsv = cv2.cvtColor(self.frame, cv2.COLOR_BGR2HSV)
             mask = cv2.inRange(hsv, np.array((0., 60., 32.)), np.array((180., 255., 255.)))
-
+            # Mira
+            cv2.circle(vis,(int(horizontalRes / 2), int(verticalRes/2)), reticleCircleSize, red, 0) #circulo
+            cv2.circle(vis,(int(horizontalRes / 2), int(verticalRes/2)), 2, red, -1) #red dot
+            cv2.line(vis,(int(horizontalRes / 2) + reticleCircleSize, int(verticalRes/2)), (int(horizontalRes / 2) + reticleCircleSize + reticleLineSize,int(verticalRes/2)), red, 1) #linha direita
+            cv2.line(vis,(int(horizontalRes / 2) - reticleCircleSize, int(verticalRes/2)), (int(horizontalRes / 2) - reticleCircleSize - reticleLineSize,int(verticalRes/2)), red, 1) #linha esquerda
+            cv2.line(vis,(int(horizontalRes / 2), int(verticalRes/2) + reticleCircleSize), (int(horizontalRes / 2),int(verticalRes/2) + reticleCircleSize + reticleLineSize), red, 1) #linha baixo
+            cv2.line(vis,(int(horizontalRes / 2), int(verticalRes/2) - reticleCircleSize), (int(horizontalRes / 2),int(verticalRes/2) - reticleCircleSize - reticleLineSize), red, 1) #linha cima
+            
             if self.selection:
+                print('a')
                 x0, y0, x1, y1 = self.selection
                 hsv_roi = hsv[y0:y1, x0:x1]
                 mask_roi = mask[y0:y1, x0:x1]
@@ -78,7 +83,6 @@ class App(object):
                 cv2.normalize(hist, hist, 0, 255, cv2.NORM_MINMAX)
                 self.hist = hist.reshape(-1)
                 self.show_hist()
-
 
                 vis_roi = vis[y0:y1, x0:x1]
                 cv2.bitwise_not(vis_roi, vis_roi)
@@ -94,23 +98,21 @@ class App(object):
                 if self.show_backproj:
                     vis[:] = prob[...,np.newaxis]
                 try:
-                # Magica                    
                     cv2.ellipse(vis, track_box, (0, 0, 255), 2)
                     #Envio e impressão dos dados do rastreamento
                     X = Alema1map(track_box[0][0],0,horizontalRes,0,255) #X convertido pra int variando de 0 a 640px
                     Y = Alema1map(track_box[0][1],0,verticalRes,0,255) #Y convertido pra int variando de 0 a 480px
-
-                    '''
+                    '''               
                     if X < 118 and X != 0:
-                        ser.write('1'.encode('utf-8'))
+                        ser.write([4])
                     if X > 138 and X != 0:
-                        ser.write('5'.encode('utf-8'))
-                    if X >118 and X<138:
-                        ser.write('0'.encode('utf-8'))
+                        ser.write([8])
+                        
+                    if Y < 118 and X != 0:
+                        ser.write([12])
+                    if Y > 138 and X != 0:
+                        ser.write([16])
                     '''
-                    print(X)
-                    print(Y)
-                    time.sleep(0.05)
                 except:
                    print('Excecao!')
 
@@ -121,3 +123,4 @@ class App(object):
             if ch == ord('b'):
                 self.show_backproj = not self.show_backproj
         cv2.destroyAllWindows()
+

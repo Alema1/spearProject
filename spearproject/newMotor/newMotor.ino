@@ -51,7 +51,7 @@ void loop(){
       passo(pulX, dirX, 3000, 1);
     }
     if(incomingByte == 4){
-      passo(pulX, dirX, 2000, 1);
+      passo(pulX, dirX, 2500, 1);
     }
     
     if(incomingByte == 5){
@@ -64,35 +64,35 @@ void loop(){
       passo(pulX, dirX, 3000, 0);
     }
     if(incomingByte == 8){
-      passo(pulX, dirX, 2000, 0);
+      passo(pulX, dirX, 2500, 0);
     }
 
-    // Eixo X
+    // Eixo Y
    
     if(incomingByte == 9){
-      passo(pulY, dirY, 6000, 1);
+      passo(pulY, dirY, 4000, 1);
     }
     if(incomingByte == 10){
-      passo(pulY, dirY, 4000, 1); 
+      passo(pulY, dirY, 3000, 1); 
     }
     if(incomingByte == 11){
-      passo(pulY, dirY, 3000, 1);
+      passo(pulY, dirY, 1000, 1);
     }
     if(incomingByte == 12){
-      passo(pulY, dirY, 2000, 1);
+      passo(pulY, dirY, 500, 1);
     }
     
     if(incomingByte == 13){
-      passo(pulY, dirY, 6000, 0);
+      passo(pulY, dirY, 4000, 0);
     }
     if(incomingByte == 14){
-      passo(pulY, dirY, 4000, 0); 
-    }
+      passo(pulY, dirY, 3000, 0); 
+   }
     if(incomingByte == 15){
-      passo(pulY, dirY, 3000, 0);
+      passo(pulY, dirY, 1000, 0);
     }
     if(incomingByte == 16){
-      passo(pulY, dirY, 2000, 0);
+      passo(pulY, dirY, 500, 0);
     }
 
   }

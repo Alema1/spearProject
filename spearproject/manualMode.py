@@ -13,6 +13,7 @@ from   msvcrt import kbhit
 import pywinusb.hid as hid
 import serial
 import sys
+import cv2
 
 joystickID = 0xb108
 globals()['xAxis'] = 0
@@ -38,17 +39,18 @@ def sample_handler(data):
     global triggerState
     global xAxis
     global yAxis        
-
-    # Estado do gatilho
-    if data[1] == 1 and triggerState == 0:
-        triggerState = 1
     
     # Estado do botao modo de operação
-    if data[1] == 2 and operationMode < 3:
-        operationMode += 1
-    if data[1] == 2 and operationMode > 2:
+    if (data[1] == 2 and operationMode == 2):
+        print('b')
         operationMode = 0
-    
+    if operationMode == 0 and data[1] == 1:
+        print('a')
+        operationMode = 1
+    if (data[1] == 2 and operationMode == 1):
+        print('c')
+        operationMode = 2
+
     # Eixo X
     if data[5] == 1:
         if data[4] > 128:
@@ -101,6 +103,9 @@ def sample_handler(data):
         else:
             yAxis = 16
 
+    print('operationMode'+str(operationMode))
+    print('triggerState'+str(triggerState))
+
 def raw_test():
     all_hids = hid.find_all_hid_devices()
     if all_hids:
@@ -117,8 +122,6 @@ def raw_test():
                                 ser.flush()
                                 ser.write([xAxis])
                                 ser.write([yAxis])
-                                #print('x' + str(xAxis))
-                                #print('y' + str(yAxis))
                             except:
                                 print("Erro ao enviar os dados para o microcontrolador!")
                                 pass # Se não conseguir escrever vai para a proxima interação
